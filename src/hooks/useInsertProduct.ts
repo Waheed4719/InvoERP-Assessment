@@ -17,7 +17,7 @@ const useInsertProduct = () => {
           price,
         },
       });
-      message.success('Product inserted successfully')
+      message.success('Product added successfully')
       return data;
     } catch (error) {
       console.log(error);

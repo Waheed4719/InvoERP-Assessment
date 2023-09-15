@@ -1,22 +1,37 @@
 import { useState } from 'react';
-import { Button, Layout, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import ProductsTable from './components/ProductsTable';
 import useGetProducts from './hooks/useGetProducts';
 import useGetProductsCount from './hooks/useGetProductsCount';
 import InsertProductModal from './components/InsertProductModal';
 import PlusIcon from './components/icons/PlusIcon';
 import Container from './components/Container';
-const { Content } = Layout;
+import useInsertProduct from './hooks/useInsertProduct';
+
 const { Title } = Typography;
 
 export function Products(): JSX.Element {
   const [modalOpen, setModalOpen] = useState(false);
-  const { data: productsCountData } = useGetProductsCount();
-  const { data: productsData } = useGetProducts();
+  const { data: productsCountData, refetch: refetchProductsCount } =
+    useGetProductsCount();
+  const { data: productsData, refetch: refetchProducts } = useGetProducts();
+
+  const handleInsertProduct = useInsertProduct();
   const products = productsData?.products ?? [];
 
+  const submitForm = async (values: any) => {
+    try {
+      await handleInsertProduct(values);
+      setModalOpen(false);
+      refetchProducts();
+      refetchProductsCount();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div style={{ height: '100%', backgroundColor: '#fff' }}>
+    <div style={{ height: '100%', backgroundColor: '#fff', padding: '20px' }}>
       <Container>
         <div
           style={{
@@ -55,12 +70,13 @@ export function Products(): JSX.Element {
         </div>
 
         <ProductsTable data={products ?? []} />
-
-        <InsertProductModal
-          open={modalOpen}
-          onOk={() => setModalOpen(false)}
-          onCancel={() => setModalOpen(false)}
-        />
+        {modalOpen && (
+          <InsertProductModal
+            open={modalOpen}
+            onOk={submitForm}
+            onCancel={() => setModalOpen(false)}
+          />
+        )}
       </Container>
     </div>
   );

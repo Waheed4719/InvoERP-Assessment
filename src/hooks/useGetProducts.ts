@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import { getProductsQuery } from "../lib/graphql/queries";
 
 const useGetProducts = () => {
-  const { data, loading, error } = useQuery(getProductsQuery);
-  return { data, loading, error };
+  const query = useQuery(getProductsQuery);
+  return query;
 };
 
 export default useGetProducts;

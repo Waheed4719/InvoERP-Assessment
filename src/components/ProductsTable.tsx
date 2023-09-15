@@ -72,17 +72,16 @@ const ProductsTable = ({ data }: TableComponentProps) => {
   return (
     <Table
       bordered
+      pagination={{ pageSize: 10 }}
       columns={columns}
       dataSource={data}
       onChange={onChange}
       scroll={{ x: 1000 }}
       rowKey={(record) => record.id}
       summary={(pageData) => {
-        let totalStock = 0;
         let totalPrice = 0;
 
         pageData.forEach(({ stock, price }) => {
-          totalStock += stock;
           totalPrice += price * stock;
         });
 
