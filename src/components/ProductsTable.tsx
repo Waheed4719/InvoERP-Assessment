@@ -36,14 +36,26 @@ const columns: ColumnsType<ProductType> = [
     },
   },
   {
+    title: 'Stock',
+    dataIndex: 'stock',
+    sorter: (a, b) => a.stock - b.stock,
+  },
+  {
     title: 'Price ($)',
     dataIndex: 'price',
     sorter: (a, b) => a.price - b.price,
   },
   {
-    title: 'Stock',
-    dataIndex: 'stock',
-    sorter: (a, b) => a.stock - b.stock,
+    title: 'Total Price ($)',
+    dataIndex: 'totalPrice',
+    render: (_, record) => {
+      return <span>{(record.stock * record.price).toFixed(2)}</span>;
+    },
+    sorter: (a, b) => {
+      const totalPriceA = a.stock * a.price;
+      const totalPriceB = b.stock * b.price;
+      return totalPriceA - totalPriceB;
+    },
   },
 ];
 
@@ -71,20 +83,17 @@ const ProductsTable = ({ data }: TableComponentProps) => {
 
         pageData.forEach(({ stock, price }) => {
           totalStock += stock;
-          totalPrice += price;
+          totalPrice += price * stock;
         });
 
         return (
           <Table.Summary fixed>
             <Row className="bg-light-gray">
-              <Cell colSpan={3} index={0}>
-                <Text strong>Total</Text>
+              <Cell colSpan={5} index={0}>
+                <Text strong>Total Value ($)</Text>
               </Cell>
               <Cell index={0}>
                 <Text strong>{totalPrice.toFixed(2)}</Text>
-              </Cell>
-              <Cell index={0}>
-                <Text strong>{totalStock}</Text>
               </Cell>
             </Row>
           </Table.Summary>
