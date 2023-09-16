@@ -12,6 +12,7 @@ type TableComponentProps = {
     current: number
     total: number
   }
+  loading: boolean
   onTableValuesChange: (pagination: {
     current: number
     pageSize: number
@@ -72,6 +73,7 @@ const ProductsTable = ({
   data,
   onTableValuesChange,
   pagination,
+  loading,
 }: TableComponentProps) => {
   const onChange: TableProps<Product>['onChange'] = (
     pagination,
@@ -94,6 +96,7 @@ const ProductsTable = ({
   }
   return (
     <Table
+      loading={loading}
       bordered
       pagination={{
         showSizeChanger: true,

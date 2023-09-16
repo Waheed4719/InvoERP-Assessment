@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Typography, Spin } from 'antd'
+import { Button, Typography, Spin, Alert, Tooltip } from 'antd'
 import ProductsTable from './components/ProductsTable'
 import InsertProductModal from './components/InsertProductModal'
 import PlusIcon from './components/icons/PlusIcon'
@@ -7,6 +7,7 @@ import Container from './components/Container'
 import useInsertProduct from './hooks/useInsertProduct'
 import { ProductForm } from './types'
 import useGetProducts from './hooks/useGetProducts'
+import ReloadIcon from './components/icons/ReloadIcon'
 
 const { Title } = Typography
 
@@ -18,6 +19,7 @@ const Products = () => {
     data: productsData,
     refetch: refetchProducts,
     loading: isLoadingProducts,
+    error: productsError,
   } = useGetProducts({
     variables: {
       limit: pageSize,
@@ -102,7 +104,29 @@ const Products = () => {
             Add Product
           </Button>
         </div>
-
+        {productsError && (
+          <Alert
+            message="Error Loading Products"
+            type="error"
+            showIcon
+            action={
+              <Tooltip title="Reload Products">
+                <Button
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    padding: 0,
+                  }}
+                  onClick={() => refetchProducts()}
+                >
+                  <ReloadIcon />
+                </Button>
+              </Tooltip>
+            }
+          />
+        )}
         <ProductsTable
           data={products ?? []}
           pagination={{
@@ -110,6 +134,7 @@ const Products = () => {
             pageSize: pageSize,
             total: productsCount,
           }}
+          loading={isLoadingProducts}
           onTableValuesChange={handleTableChange}
         />
         {modalOpen && (
