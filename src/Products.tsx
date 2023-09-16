@@ -18,10 +18,13 @@ export function Products(): JSX.Element {
 
   const handleInsertProduct = useInsertProduct();
   const products = productsData?.products ?? [];
+  const productsCount =
+    productsCountData?.products_aggregate?.aggregate.count ?? 0;
 
   const submitForm = async (values: any) => {
     try {
       await handleInsertProduct(values);
+      console.log('getting in here');
       setModalOpen(false);
       refetchProducts();
       refetchProductsCount();
@@ -55,7 +58,7 @@ export function Products(): JSX.Element {
               }}>
               <div>Total Products:</div>
               <span style={{ color: 'darkslategray', fontWeight: 500 }}>
-                {productsCountData?.products_aggregate?.aggregate.count}
+                {productsCount}
               </span>
             </div>
           </div>

@@ -19,9 +19,15 @@ const useInsertProduct = () => {
       });
       message.success('Product added successfully')
       return data;
-    } catch (error) {
-      console.log(error);
-      message.error('Something went wrong')
+    } catch (error: any) {
+      console.log(error, error.toString());
+      if(error.toString().includes('Uniqueness violation')){
+        message.error('Product already exists')
+      }
+      else{
+        message.error('Something went wrong')
+      }
+      throw error
     }
   };
   return handleInsertProduct;
