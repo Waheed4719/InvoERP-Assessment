@@ -12,10 +12,19 @@ import './App.css'
 const { Header, Content } = Layout
 const { Title } = Typography
 
+const headers: Record<string, string> = {}
+
+// Conditionally add the header if the condition is met
+if (process.env.NODE_ENV === 'production') {
+  headers['x-hasura-admin-secret'] = process.env
+    .REACT_APP_X_HASURA_ADMIN_SECRET as string
+}
+
 const createApolloClient = () => {
   return new ApolloClient({
     link: new HttpLink({
-      uri: 'http://localhost:8080/v1/graphql',
+      uri: process.env.REACT_APP_HASURA_URI,
+      headers,
     }),
     cache: new InMemoryCache(),
   })
