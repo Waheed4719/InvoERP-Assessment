@@ -17,12 +17,12 @@ const InsertProductModal = ({ open, onOk, onCancel }: Props) => {
       .validateFields()
       .then((values) => {
         onOk(values) // Call onOk with the validated form values
-        form.resetFields() // Reset the form fields after submission
       })
       .catch(() => {
         message.error('Please enter all required fields')
       })
       .finally(() => {
+        form.resetFields() // Reset the form fields after submission
         setSubmitting(false)
       })
   }
