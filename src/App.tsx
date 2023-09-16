@@ -5,7 +5,7 @@ import {
   InMemoryCache,
   HttpLink,
 } from '@apollo/client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Products from './Products';
 import './App.css';
 

@@ -25,7 +25,6 @@ const Products = () => {
   const submitForm = async (values: ProductForm) => {
     try {
       await handleInsertProduct(values);
-      console.log('getting in here');
       setModalOpen(false);
       refetchProducts();
       refetchProductsCount();
