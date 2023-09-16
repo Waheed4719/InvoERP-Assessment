@@ -7,6 +7,15 @@ const { Cell, Row } = Table.Summary
 
 type TableComponentProps = {
   data: Product[]
+  pagination: {
+    pageSize: number
+    current: number
+    total: number
+  }
+  onTableValuesChange: (pagination: {
+    current: number
+    pageSize: number
+  }) => void
 }
 
 const columns: ColumnsType<Product> = [
@@ -59,20 +68,38 @@ const columns: ColumnsType<Product> = [
   },
 ]
 
-const onChange: TableProps<Product>['onChange'] = (
+const ProductsTable = ({
+  data,
+  onTableValuesChange,
   pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log('params', pagination, filters, sorter, extra)
-}
-
-const ProductsTable = ({ data }: TableComponentProps) => {
+}: TableComponentProps) => {
+  const onChange: TableProps<Product>['onChange'] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log(
+      'params',
+      pagination,
+      filters,
+      sorter,
+      extra,
+      pagination.current
+    )
+    onTableValuesChange({
+      current: pagination.current ?? 1,
+      pageSize: pagination.pageSize ?? 10,
+    })
+  }
   return (
     <Table
       bordered
-      pagination={{ pageSize: 10 }}
+      pagination={{
+        showSizeChanger: true,
+        pageSizeOptions: ['2', '5', '10', '15', '30', '50', '100'],
+        ...pagination,
+      }}
       columns={columns}
       dataSource={data}
       onChange={onChange}

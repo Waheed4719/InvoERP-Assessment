@@ -1,23 +1,19 @@
 import { gql, DocumentNode } from '@apollo/client'
 
-export const GET_PRODUCTS_COUNT: DocumentNode = gql`
-  query CountQuery {
-    products_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`
-
 export const GET_PRODUCTS: DocumentNode = gql`
-  query getProducts {
-    products {
+  query getProducts($limit: Int!, $offset: Int!) {
+    products(limit: $limit, offset: $offset) {
       id
       name
       description
       stock
       price
+    }
+
+    products_aggregate {
+      aggregate {
+        count
+      }
     }
   }
 `

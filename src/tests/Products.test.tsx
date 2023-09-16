@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { ReactElement } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
-import { MockedProvider, MockedResponse } from '@apollo/client/testing' // Import MockedProvider
+import { MockedProvider, MockedResponse, wait } from '@apollo/client/testing' // Import MockedProvider
 import { queryMocks } from '../lib/graphql/mocks' // Import your GraphQL query
 import Products from '../Products'
 
@@ -63,7 +63,6 @@ describe('Products Component Tests', () => {
       addTypename: false,
     }
     renderWithMockedProvider(<Products />, mockedProvideroptions)
-
     await waitFor(() => {
       const productCount = screen.getByTestId('products-count')
       expect(productCount).toHaveTextContent('2')

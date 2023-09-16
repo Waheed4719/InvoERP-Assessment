@@ -1,39 +1,53 @@
 import { useState } from 'react'
 import { Button, Typography, Spin } from 'antd'
 import ProductsTable from './components/ProductsTable'
-import useGetProducts from './hooks/useGetProducts'
-import useGetProductsCount from './hooks/useGetProductsCount'
 import InsertProductModal from './components/InsertProductModal'
 import PlusIcon from './components/icons/PlusIcon'
 import Container from './components/Container'
 import useInsertProduct from './hooks/useInsertProduct'
 import { ProductForm } from './types'
+import useGetProducts from './hooks/useGetProducts'
 
 const { Title } = Typography
 
 const Products = () => {
   const [modalOpen, setModalOpen] = useState(false)
-  const { data: productsCountData, refetch: refetchProductsCount } =
-    useGetProductsCount()
+  const [pageSize, setPageSize] = useState(5) // Set your desired page size
+  const [currentPage, setCurrentPage] = useState(1)
   const {
     data: productsData,
     refetch: refetchProducts,
     loading: isLoadingProducts,
-  } = useGetProducts()
+  } = useGetProducts({
+    variables: {
+      limit: pageSize,
+      offset: (currentPage - 1) * pageSize,
+    },
+  })
 
-  const handleInsertProduct = useInsertProduct()
+  const handleInsertProduct = useInsertProduct({})
   const products = productsData?.products ?? []
-  const productsCount =
-    productsCountData?.products_aggregate?.aggregate.count ?? 0
+  const productsCount = productsData?.products_aggregate?.aggregate.count ?? 0
 
   const submitForm = async (values: ProductForm) => {
     try {
       await handleInsertProduct(values)
       setModalOpen(false)
       refetchProducts()
-      refetchProductsCount()
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleTableChange = (pagination: {
+    current: number
+    pageSize: number
+  }) => {
+    if (pageSize != pagination.pageSize) {
+      setPageSize(pagination.pageSize)
+      setCurrentPage(1)
+    } else {
+      setCurrentPage(pagination.current)
     }
   }
 
@@ -89,7 +103,15 @@ const Products = () => {
           </Button>
         </div>
 
-        <ProductsTable data={products ?? []} />
+        <ProductsTable
+          data={products ?? []}
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: productsCount,
+          }}
+          onTableValuesChange={handleTableChange}
+        />
         {modalOpen && (
           <InsertProductModal
             open={modalOpen}

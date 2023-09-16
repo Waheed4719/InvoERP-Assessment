@@ -1,5 +1,5 @@
 import { DocumentNode } from 'graphql'
-import { GET_PRODUCTS, GET_PRODUCTS_COUNT } from './queries'
+import { GET_PRODUCTS } from './queries'
 import { Product } from '../../types'
 import { INSERT_SINGLE_PRODUCT } from './mutations'
 
@@ -7,6 +7,7 @@ import { INSERT_SINGLE_PRODUCT } from './mutations'
 type MockRequest = {
   request: {
     query: DocumentNode
+    variables?: Record<string, unknown>
   }
   result: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,26 +33,20 @@ export const sample_products: Product[] = [
 ]
 
 export const queryMocks: MockRequest[] = [
-  // Define mock data for the GraphQL query
   {
     request: {
-      query: GET_PRODUCTS,
+      query: GET_PRODUCTS, // Use your actual query
+      variables: {
+        limit: 5,
+        offset: 0,
+      },
     },
     result: {
       data: {
         products: sample_products,
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_PRODUCTS_COUNT, // Use your actual query
-    },
-    result: {
-      data: {
         products_aggregate: {
           aggregate: {
-            count: 2, // Mock the desired count value
+            count: sample_products.length, // Mock the desired count value
           },
         },
       },

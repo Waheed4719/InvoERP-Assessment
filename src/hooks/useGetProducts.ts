@@ -1,8 +1,8 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, QueryHookOptions } from '@apollo/client'
 import { GET_PRODUCTS } from '../lib/graphql/queries'
 
-const useGetProducts = () => {
-  const query = useQuery(GET_PRODUCTS)
+const useGetProducts = (options: QueryHookOptions) => {
+  const query = useQuery(GET_PRODUCTS, options)
   return query
 }
 

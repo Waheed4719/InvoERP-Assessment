@@ -1,10 +1,10 @@
 import { message } from 'antd'
-import { useMutation } from '@apollo/client'
+import { MutationHookOptions, useMutation } from '@apollo/client'
 import { Product } from '../types'
 import { INSERT_SINGLE_PRODUCT } from './../lib/graphql/mutations'
 
-const useInsertProduct = () => {
-  const [insertProduct] = useMutation(INSERT_SINGLE_PRODUCT)
+const useInsertProduct = (options: MutationHookOptions) => {
+  const [insertProduct] = useMutation(INSERT_SINGLE_PRODUCT, options)
 
   const handleInsertProduct = async (data: Omit<Product, 'id'>) => {
     const { name, description, stock, price } = data
