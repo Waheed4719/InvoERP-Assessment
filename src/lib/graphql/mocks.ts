@@ -1,17 +1,18 @@
-import { DocumentNode } from 'graphql';
-import { GET_PRODUCTS, GET_PRODUCTS_COUNT } from './queries';
-import { Product } from '../../types';
-import { INSERT_SINGLE_PRODUCT } from './mutations';
+import { DocumentNode } from 'graphql'
+import { GET_PRODUCTS, GET_PRODUCTS_COUNT } from './queries'
+import { Product } from '../../types'
+import { INSERT_SINGLE_PRODUCT } from './mutations'
 
 // Define types for the request and result objects
 type MockRequest = {
   request: {
-    query: DocumentNode;
-  };
+    query: DocumentNode
+  }
   result: {
-    data: any; // Replace with the specific shape of your result data
-  };
-};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any // Replace with the specific shape of your result data
+  }
+}
 
 export const sample_products: Product[] = [
   {
@@ -28,7 +29,7 @@ export const sample_products: Product[] = [
     price: 1.99,
     stock: 150,
   },
-];
+]
 
 export const queryMocks: MockRequest[] = [
   // Define mock data for the GraphQL query
@@ -56,30 +57,29 @@ export const queryMocks: MockRequest[] = [
       },
     },
   },
-];
-
+]
 
 export const mutationMocks = [
-    {
-      request: {
-        query: INSERT_SINGLE_PRODUCT,
-        variables: {
-            name: 'Test Product',
-            description: 'Test Product description',
-            stock: 20,
-            price: 30.0,
-        },
+  {
+    request: {
+      query: INSERT_SINGLE_PRODUCT,
+      variables: {
+        name: 'Test Product',
+        description: 'Test Product description',
+        stock: 20,
+        price: 30.0,
       },
-      result: {
-        data: {
-          addTodo: {
-            id: "1",
-            name: 'Test Product',
-            description: 'Test Product description',
-            stock: 20,
-            price: 30.0,
-          },
+    },
+    result: {
+      data: {
+        addTodo: {
+          id: '1',
+          name: 'Test Product',
+          description: 'Test Product description',
+          stock: 20,
+          price: 30.0,
         },
       },
     },
-  ];
+  },
+]

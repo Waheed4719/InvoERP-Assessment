@@ -1,16 +1,16 @@
-import { Layout, Typography } from 'antd';
+import { Layout, Typography } from 'antd'
 import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
   HttpLink,
-} from '@apollo/client';
-import { useState } from 'react';
-import Products from './Products';
-import './App.css';
+} from '@apollo/client'
+import { useState } from 'react'
+import Products from './Products'
+import './App.css'
 
-const { Header, Content } = Layout;
-const { Title } = Typography;
+const { Header, Content } = Layout
+const { Title } = Typography
 
 const createApolloClient = () => {
   return new ApolloClient({
@@ -18,11 +18,11 @@ const createApolloClient = () => {
       uri: 'http://localhost:8080/v1/graphql',
     }),
     cache: new InMemoryCache(),
-  });
-};
+  })
+}
 
 const App = () => {
-  const [client] = useState(createApolloClient());
+  const [client] = useState(createApolloClient())
 
   return (
     <ApolloProvider client={client}>
@@ -39,7 +39,7 @@ const App = () => {
         </Layout>
       </div>
     </ApolloProvider>
-  );
-};
+  )
+}
 
-export default App;
+export default App

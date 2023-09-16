@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
 type Props = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 const Container = ({ children }: Props) => {
-  return <div className="container">{children}</div>;
-};
+  return <div className="container">{children}</div>
+}
 
-export default Container;
+export default Container

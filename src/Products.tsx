@@ -1,37 +1,37 @@
-import { useState } from 'react';
-import { Button, Typography } from 'antd';
-import ProductsTable from './components/ProductsTable';
-import useGetProducts from './hooks/useGetProducts';
-import useGetProductsCount from './hooks/useGetProductsCount';
-import InsertProductModal from './components/InsertProductModal';
-import PlusIcon from './components/icons/PlusIcon';
-import Container from './components/Container';
-import useInsertProduct from './hooks/useInsertProduct';
-import { ProductForm } from './types';
+import { useState } from 'react'
+import { Button, Typography } from 'antd'
+import ProductsTable from './components/ProductsTable'
+import useGetProducts from './hooks/useGetProducts'
+import useGetProductsCount from './hooks/useGetProductsCount'
+import InsertProductModal from './components/InsertProductModal'
+import PlusIcon from './components/icons/PlusIcon'
+import Container from './components/Container'
+import useInsertProduct from './hooks/useInsertProduct'
+import { ProductForm } from './types'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 const Products = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
   const { data: productsCountData, refetch: refetchProductsCount } =
-    useGetProductsCount();
-  const { data: productsData, refetch: refetchProducts } = useGetProducts();
+    useGetProductsCount()
+  const { data: productsData, refetch: refetchProducts } = useGetProducts()
 
-  const handleInsertProduct = useInsertProduct();
-  const products = productsData?.products ?? [];
+  const handleInsertProduct = useInsertProduct()
+  const products = productsData?.products ?? []
   const productsCount =
-    productsCountData?.products_aggregate?.aggregate.count ?? 0;
+    productsCountData?.products_aggregate?.aggregate.count ?? 0
 
   const submitForm = async (values: ProductForm) => {
     try {
-      await handleInsertProduct(values);
-      setModalOpen(false);
-      refetchProducts();
-      refetchProductsCount();
+      await handleInsertProduct(values)
+      setModalOpen(false)
+      refetchProducts()
+      refetchProductsCount()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   return (
     <div style={{ height: '100%', backgroundColor: '#fff', padding: '20px' }}>
@@ -43,7 +43,8 @@ const Products = () => {
             alignItems: 'center',
             flexWrap: 'wrap',
             gap: 10,
-          }}>
+          }}
+        >
           <div>
             <Title level={2} style={{ margin: 0, display: 'flex' }}>
               Products
@@ -55,7 +56,8 @@ const Products = () => {
                 alignItems: 'center',
                 fontSize: 18,
                 color: '#666',
-              }}>
+              }}
+            >
               <div>Total Products:</div>
               <span style={{ color: 'darkslategray', fontWeight: 500 }}>
                 {productsCount}
@@ -67,7 +69,8 @@ const Products = () => {
             icon={<PlusIcon />}
             type="primary"
             style={{ display: 'flex', alignItems: 'center' }}
-            onClick={() => setModalOpen(true)}>
+            onClick={() => setModalOpen(true)}
+          >
             Add Product
           </Button>
         </div>
@@ -82,7 +85,7 @@ const Products = () => {
         )}
       </Container>
     </div>
-  );
-};
+  )
+}
 
-export default Products;
+export default Products

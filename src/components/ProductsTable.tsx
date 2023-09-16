@@ -1,13 +1,13 @@
-import { Table, Typography } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
-import { Product } from '../types';
+import { Table, Typography } from 'antd'
+import type { ColumnsType, TableProps } from 'antd/es/table'
+import { Product } from '../types'
 
-const { Text } = Typography;
-const { Cell, Row } = Table.Summary;
+const { Text } = Typography
+const { Cell, Row } = Table.Summary
 
 type TableComponentProps = {
-  data: Product[];
-};
+  data: Product[]
+}
 
 const columns: ColumnsType<Product> = [
   {
@@ -23,7 +23,7 @@ const columns: ColumnsType<Product> = [
     onHeaderCell: () => {
       return {
         style: { whiteSpace: 'pre-wrap', minWidth: 150 },
-      };
+      }
     },
   },
   {
@@ -32,7 +32,7 @@ const columns: ColumnsType<Product> = [
     onHeaderCell: () => {
       return {
         style: { whiteSpace: 'pre-wrap', minWidth: 300 },
-      };
+      }
     },
   },
   {
@@ -49,24 +49,24 @@ const columns: ColumnsType<Product> = [
     title: 'Total Price ($)',
     dataIndex: 'totalPrice',
     render: (_, record) => {
-      return <span>{(record.stock * record.price).toFixed(2)}</span>;
+      return <span>{(record.stock * record.price).toFixed(2)}</span>
     },
     sorter: (a, b) => {
-      const totalPriceA = a.stock * a.price;
-      const totalPriceB = b.stock * b.price;
-      return totalPriceA - totalPriceB;
+      const totalPriceA = a.stock * a.price
+      const totalPriceB = b.stock * b.price
+      return totalPriceA - totalPriceB
     },
   },
-];
+]
 
 const onChange: TableProps<Product>['onChange'] = (
   pagination,
   filters,
   sorter,
-  extra,
+  extra
 ) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+  console.log('params', pagination, filters, sorter, extra)
+}
 
 const ProductsTable = ({ data }: TableComponentProps) => {
   return (
@@ -79,11 +79,11 @@ const ProductsTable = ({ data }: TableComponentProps) => {
       scroll={{ x: 1000 }}
       rowKey={(record) => record.id}
       summary={(pageData) => {
-        let totalPrice = 0;
+        let totalPrice = 0
 
         pageData.forEach(({ stock, price }) => {
-          totalPrice += price * stock;
-        });
+          totalPrice += price * stock
+        })
 
         return (
           <Table.Summary fixed>
@@ -96,10 +96,10 @@ const ProductsTable = ({ data }: TableComponentProps) => {
               </Cell>
             </Row>
           </Table.Summary>
-        );
+        )
       }}
     />
-  );
-};
+  )
+}
 
-export default ProductsTable;
+export default ProductsTable
