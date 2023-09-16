@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { ReactElement } from 'react'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider, MockedResponse } from '@apollo/client/testing' // Import MockedProvider
