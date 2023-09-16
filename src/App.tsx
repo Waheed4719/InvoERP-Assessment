@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
-import './App.css';
-
 import { Layout, Typography } from 'antd';
-
 import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
   HttpLink,
 } from '@apollo/client';
-import { Products } from './Products';
+import React, { useState } from 'react';
+import Products from './Products';
+import './App.css';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -23,7 +21,7 @@ const createApolloClient = () => {
   });
 };
 
-function App() {
+const App = () => {
   const [client] = useState(createApolloClient());
 
   return (
@@ -42,6 +40,6 @@ function App() {
       </div>
     </ApolloProvider>
   );
-}
+};
 
 export default App;

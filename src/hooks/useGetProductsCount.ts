@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
-import { getProductsCount } from "../lib/graphql/queries";
+import { GET_PRODUCTS_COUNT } from "../lib/graphql/queries";
 
 const useGetProductsCount = () => {
-  const query = useQuery(getProductsCount);
+  const query = useQuery(GET_PRODUCTS_COUNT);
   return query;
 };
 

@@ -1,6 +1,6 @@
-import {gql} from '@apollo/client'
+import {gql, DocumentNode} from '@apollo/client'
 
-export const getProductsCount = gql`
+export const GET_PRODUCTS_COUNT:DocumentNode = gql`
   query CountQuery {
     products_aggregate {
       aggregate {
@@ -10,8 +10,8 @@ export const getProductsCount = gql`
   }
 `;
 
-export const getProductsQuery = gql`
-  query getProductsQuery {
+export const GET_PRODUCTS:DocumentNode = gql`
+  query getProducts {
     products {
       id
       name

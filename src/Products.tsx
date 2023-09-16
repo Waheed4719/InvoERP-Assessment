@@ -7,10 +7,11 @@ import InsertProductModal from './components/InsertProductModal';
 import PlusIcon from './components/icons/PlusIcon';
 import Container from './components/Container';
 import useInsertProduct from './hooks/useInsertProduct';
+import { ProductForm } from './types';
 
 const { Title } = Typography;
 
-export function Products(): JSX.Element {
+const Products = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { data: productsCountData, refetch: refetchProductsCount } =
     useGetProductsCount();
@@ -21,7 +22,7 @@ export function Products(): JSX.Element {
   const productsCount =
     productsCountData?.products_aggregate?.aggregate.count ?? 0;
 
-  const submitForm = async (values: any) => {
+  const submitForm = async (values: ProductForm) => {
     try {
       await handleInsertProduct(values);
       console.log('getting in here');
@@ -83,4 +84,6 @@ export function Products(): JSX.Element {
       </Container>
     </div>
   );
-}
+};
+
+export default Products;

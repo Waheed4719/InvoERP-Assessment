@@ -1,15 +1,15 @@
 import { Table, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import { ProductType } from '../types';
+import { Product } from '../types';
 
 const { Text } = Typography;
 const { Cell, Row } = Table.Summary;
 
 type TableComponentProps = {
-  data: ProductType[];
+  data: Product[];
 };
 
-const columns: ColumnsType<ProductType> = [
+const columns: ColumnsType<Product> = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -59,7 +59,7 @@ const columns: ColumnsType<ProductType> = [
   },
 ];
 
-const onChange: TableProps<ProductType>['onChange'] = (
+const onChange: TableProps<Product>['onChange'] = (
   pagination,
   filters,
   sorter,

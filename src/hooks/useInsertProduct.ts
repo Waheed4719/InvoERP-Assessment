@@ -1,12 +1,12 @@
 import { message } from "antd";
 import { useMutation } from "@apollo/client";
-import { ProductType } from "../types";
-import { insertSingleProduct } from "./../lib/graphql/mutations";
+import { Product } from "../types";
+import { INSERT_SINGLE_PRODUCT } from "./../lib/graphql/mutations";
 
 const useInsertProduct = () => {
-  const [insertProduct] = useMutation(insertSingleProduct);
+  const [insertProduct] = useMutation(INSERT_SINGLE_PRODUCT);
 
-  const handleInsertProduct = async (data: Omit<ProductType, "id">) => {
+  const handleInsertProduct = async (data: Omit<Product, "id">) => {
     const { name, description, stock, price } = data;
     try {
       const { data } = await insertProduct({
@@ -20,7 +20,6 @@ const useInsertProduct = () => {
       message.success('Product added successfully')
       return data;
     } catch (error: any) {
-      console.log(error, error.toString());
       if(error.toString().includes('Uniqueness violation')){
         message.error('Product already exists')
       }
