@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import InsertProductModal from '../components/InsertProductModal'
 import { message } from 'antd'
 
@@ -42,10 +42,11 @@ describe('InsertProductModal Tests', () => {
     // Fill in form inputs
     const nameInput = getByTestId('name-input')
     const descriptionInput = getByTestId('description-input')
-
-    fireEvent.change(nameInput, { target: { value: 'Test Name' } })
-    fireEvent.change(descriptionInput, {
-      target: { value: 'Test Description' },
+    await act(() => {
+      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
+      fireEvent.change(descriptionInput, {
+        target: { value: 'Test Description' },
+      })
     })
     await waitFor(() => {
       expect(nameInput).toHaveValue('Test Name')
@@ -65,18 +66,19 @@ describe('InsertProductModal Tests', () => {
     const descriptionInput = getByTestId('description-input')
     const stockInput = getByTestId('stock-input')
     const priceInput = getByTestId('price-input')
-
-    fireEvent.change(nameInput, { target: { value: 'Test Name' } })
-    fireEvent.change(descriptionInput, {
-      target: { value: 'Test Description' },
+    await act(() => {
+      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
+      fireEvent.change(descriptionInput, {
+        target: { value: 'Test Description' },
+      })
+      fireEvent.change(stockInput, { target: { value: '10' } })
+      fireEvent.change(priceInput, { target: { value: '9.99' } })
     })
-    fireEvent.change(stockInput, { target: { value: '10' } })
-    fireEvent.change(priceInput, { target: { value: '9.99' } })
-
     // Click the "Add Product" button in the modal to submit
     const modalSubmitButton = getByTestId('add-product')
-    fireEvent.click(modalSubmitButton)
-
+    await act(() => {
+      fireEvent.click(modalSubmitButton)
+    })
     // Wait for the form submission to settle
     await waitFor(() => {
       // Check if onOk was called with the expected form inputs
@@ -92,7 +94,7 @@ describe('InsertProductModal Tests', () => {
   it('should display validation error message on failed submission', async () => {
     const mockOnOk = jest.fn()
     const mockOnCancel = jest.fn()
-    const { getByTestId, getByText } = render(
+    const { getByTestId } = render(
       <InsertProductModal open={true} onCancel={mockOnCancel} onOk={mockOnOk} />
     )
     // Create a spy/mock for the message.error method
@@ -102,24 +104,25 @@ describe('InsertProductModal Tests', () => {
     const descriptionInput = getByTestId('description-input')
     const stockInput = getByTestId('stock-input')
     const priceInput = getByTestId('price-input')
-
-    fireEvent.change(nameInput, { target: { value: '' } })
-    fireEvent.change(descriptionInput, { target: { value: '' } })
-    fireEvent.change(stockInput, { target: { value: '10' } })
-    fireEvent.change(priceInput, { target: { value: '9.99' } })
-
+    await act(() => {
+      fireEvent.change(nameInput, { target: { value: '' } })
+      fireEvent.change(descriptionInput, { target: { value: '' } })
+      fireEvent.change(stockInput, { target: { value: '10' } })
+      fireEvent.change(priceInput, { target: { value: '9.99' } })
+    })
     // Click the "Add Product" button in the modal to submit
     const modalSubmitButton = getByTestId('add-product')
-    fireEvent.click(modalSubmitButton)
-
+    await act(() => {
+      fireEvent.click(modalSubmitButton)
+    })
     // Wait for the form submission and validation to settle
     await waitFor(() => {
       // Check if a validation error message is displayed for the name input
-      const nameError = getByText('Please enter a name')
+      const nameError = screen.getByText('Please enter a name')
       expect(nameError).toBeInTheDocument()
 
       // Check if a validation error message is displayed for the description input
-      const descriptionError = getByText('Please enter a description')
+      const descriptionError = screen.getByText('Please enter a description')
       expect(descriptionError).toBeInTheDocument()
 
       // Ensure that onOk was not called since the form submission failed
