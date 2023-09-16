@@ -1,4 +1,5 @@
-import { Form, Input, InputNumber, Modal } from 'antd'
+import { Form, Input, InputNumber, Modal, message } from 'antd'
+import { useState } from 'react'
 import { ProductForm } from '../types'
 
 type Props = {
@@ -9,16 +10,20 @@ type Props = {
 
 const InsertProductModal = ({ open, onOk, onCancel }: Props) => {
   const [form] = Form.useForm()
-
+  const [submitting, setSubmitting] = useState(false)
   const handleFormSubmit = () => {
+    setSubmitting(true)
     form
       .validateFields()
       .then((values) => {
         onOk(values) // Call onOk with the validated form values
         form.resetFields() // Reset the form fields after submission
       })
-      .catch((errorInfo) => {
-        console.log('Validation Failed:', errorInfo)
+      .catch(() => {
+        message.error('Please enter all required fields')
+      })
+      .finally(() => {
+        setSubmitting(false)
       })
   }
 
@@ -28,11 +33,14 @@ const InsertProductModal = ({ open, onOk, onCancel }: Props) => {
       centered
       open={open}
       onOk={handleFormSubmit}
+      cancelButtonProps={{ 'data-testid': 'cancel-add-product' }}
+      okButtonProps={{ 'data-testid': 'add-product', disabled: submitting }}
       onCancel={onCancel}
       okText="Add Product"
       data-testid="insert-product-modal" // Add a test ID to the modal itself
     >
       <Form
+        role="form" // Add a role to the form
         form={form}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 14 }}
@@ -61,11 +69,11 @@ const InsertProductModal = ({ open, onOk, onCancel }: Props) => {
             {
               type: 'number',
               min: 1,
-              message: 'Stock must be a positive number',
+              message: 'Stock should be greater than 0',
             },
           ]}
         >
-          <InputNumber min={1} placeholder="Stock" data-testid="stock-input" />
+          <InputNumber min={0} placeholder="Stock" data-testid="stock-input" />
         </Form.Item>
         <Form.Item
           label="Price ($)"
@@ -80,11 +88,7 @@ const InsertProductModal = ({ open, onOk, onCancel }: Props) => {
             },
           ]}
         >
-          <InputNumber
-            min={0.0}
-            placeholder="Price"
-            data-testid="price-input"
-          />
+          <InputNumber min={0.0} placeholder="0.00" data-testid="price-input" />
         </Form.Item>
       </Form>
     </Modal>

@@ -17,16 +17,16 @@ type MockRequest = {
 export const sample_products: Product[] = [
   {
     id: 1,
-    name: 'Banana',
-    description: 'A banana',
-    price: 1.99,
+    name: 'Mercedes',
+    description: 'A car',
+    price: 23234.99,
     stock: 150,
   },
   {
     id: 2,
-    name: 'Apple',
-    description: 'An apple',
-    price: 1.99,
+    name: 'Range Rover',
+    description: 'A truck',
+    price: 32415.99,
     stock: 150,
   },
 ]
@@ -51,7 +51,7 @@ export const queryMocks: MockRequest[] = [
       data: {
         products_aggregate: {
           aggregate: {
-            count: 10, // Mock the desired count value
+            count: 2, // Mock the desired count value
           },
         },
       },
@@ -73,7 +73,7 @@ export const mutationMocks = [
     result: {
       data: {
         addTodo: {
-          id: '1',
+          id: '3',
           name: 'Test Product',
           description: 'Test Product description',
           stock: 20,

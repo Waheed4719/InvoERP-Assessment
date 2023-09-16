@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Typography } from 'antd'
+import { Button, Typography, Spin } from 'antd'
 import ProductsTable from './components/ProductsTable'
 import useGetProducts from './hooks/useGetProducts'
 import useGetProductsCount from './hooks/useGetProductsCount'
@@ -15,7 +15,11 @@ const Products = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const { data: productsCountData, refetch: refetchProductsCount } =
     useGetProductsCount()
-  const { data: productsData, refetch: refetchProducts } = useGetProducts()
+  const {
+    data: productsData,
+    refetch: refetchProducts,
+    loading: isLoadingProducts,
+  } = useGetProducts()
 
   const handleInsertProduct = useInsertProduct()
   const products = productsData?.products ?? []
@@ -46,8 +50,14 @@ const Products = () => {
           }}
         >
           <div>
-            <Title level={2} style={{ margin: 0, display: 'flex' }}>
-              Products
+            <Title
+              level={2}
+              style={{ margin: 0, display: 'flex', alignItems: 'center' }}
+            >
+              Products{' '}
+              <span style={{ marginLeft: 15 }}>
+                {isLoadingProducts && <Spin />}
+              </span>
             </Title>
             <div
               style={{
@@ -59,13 +69,17 @@ const Products = () => {
               }}
             >
               <div>Total Products:</div>
-              <span style={{ color: 'darkslategray', fontWeight: 500 }}>
+              <span
+                style={{ color: 'darkslategray', fontWeight: 500 }}
+                data-testid="products-count"
+              >
                 {productsCount}
               </span>
             </div>
           </div>
 
           <Button
+            data-testid="open-add-product-modal-button"
             icon={<PlusIcon />}
             type="primary"
             style={{ display: 'flex', alignItems: 'center' }}
