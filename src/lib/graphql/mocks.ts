@@ -1,6 +1,6 @@
 import { DocumentNode } from 'graphql'
 import { GET_PRODUCTS } from './queries'
-import { Product } from '../../types'
+import { sample_products } from '../../data/dummy'
 import { INSERT_SINGLE_PRODUCT } from './mutations'
 
 // Define types for the request and result objects
@@ -15,23 +15,6 @@ type MockRequest = {
   }
 }
 
-export const sample_products: Product[] = [
-  {
-    id: 1,
-    name: 'Mercedes',
-    description: 'A car',
-    price: 23234.99,
-    stock: 150,
-  },
-  {
-    id: 2,
-    name: 'Range Rover',
-    description: 'A truck',
-    price: 32415.99,
-    stock: 150,
-  },
-]
-
 export const queryMocks: MockRequest[] = [
   {
     request: {
@@ -44,10 +27,10 @@ export const queryMocks: MockRequest[] = [
     },
     result: {
       data: {
-        products: sample_products,
+        products: sample_products.slice(0, 2),
         products_aggregate: {
           aggregate: {
-            count: sample_products.length, // Mock the desired count value
+            count: 2, // Mock the desired count value
           },
         },
       },
@@ -55,9 +38,9 @@ export const queryMocks: MockRequest[] = [
   },
   {
     request: {
-      query: GET_PRODUCTS, // The refetch query you want to mock
+      query: GET_PRODUCTS,
       variables: {
-        limit: 5, // Specify the variables if your query requires them
+        limit: 5,
         offset: 0,
         searchQuery: '',
       },
@@ -65,10 +48,7 @@ export const queryMocks: MockRequest[] = [
     result: {
       data: {
         products: [
-          // Mocked product data that matches your query
-          // You can provide any data that you expect the refetch query to return
-          // Ensure that the data structure matches the query schema
-          ...sample_products,
+          sample_products.slice(0, 2),
           {
             id: '3',
             name: 'Test Product',
@@ -80,7 +60,7 @@ export const queryMocks: MockRequest[] = [
         ],
         products_aggregate: {
           aggregate: {
-            count: sample_products.length + 1, // Mock the desired count value
+            count: 3, // Mock the desired count value
           },
         },
       },
@@ -133,6 +113,52 @@ export const mutationMocks: MockRequest[] = [
           description: 'Test Product description',
           stock: 20,
           price: 30.0,
+        },
+      },
+    },
+  },
+]
+
+export const queryPaginationMock: MockRequest[] = [
+  {
+    request: {
+      query: GET_PRODUCTS,
+      variables: {
+        limit: 5,
+        offset: 0,
+        searchQuery: '',
+      },
+    },
+
+    result: {
+      data: {
+        products: sample_products.slice(0, 5),
+        products_aggregate: {
+          aggregate: {
+            count: sample_products.length, // Mock the desired count value
+          },
+        },
+      },
+    },
+  },
+
+  {
+    request: {
+      query: GET_PRODUCTS,
+      variables: {
+        limit: 5,
+        offset: 5,
+        searchQuery: '',
+      },
+    },
+
+    result: {
+      data: {
+        products: sample_products.slice(5, 10),
+        products_aggregate: {
+          aggregate: {
+            count: sample_products.length, // Mock the desired count value
+          },
         },
       },
     },

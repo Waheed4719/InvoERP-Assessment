@@ -9,7 +9,12 @@ import { renderWithMockedProvider } from './ReusableFunctions'
 
 // Tests Done
 // * should insert a product and refetch data to add to the table
-
+type MutationVariables = {
+  name: string
+  description: string
+  price: number
+  stock: number
+}
 describe('Add Product Functionality Test', () => {
   it('should insert a product and refetch data to add to the table', async () => {
     const mockedProvideroptions = {
@@ -38,8 +43,8 @@ describe('Add Product Functionality Test', () => {
     const descriptionInput = getByTestId('description-input')
     const stockInput = getByTestId('stock-input')
     const priceInput = getByTestId('price-input')
-    const { name, description, price, stock } =
-      mutationMocks[0].request.variables
+    const { name, description, price, stock } = mutationMocks[0].request
+      .variables as MutationVariables
     await act(() => {
       fireEvent.change(nameInput, { target: { value: name } })
       fireEvent.change(descriptionInput, {

@@ -85,6 +85,7 @@ const ProductsTable = ({
     <Table
       loading={loading}
       bordered
+      data-testid="products-table"
       pagination={{
         showSizeChanger: true,
         pageSizeOptions: ['2', '5', '10', '15', '30', '50', '100'],
