@@ -75,20 +75,7 @@ const ProductsTable = ({
   pagination,
   loading,
 }: TableComponentProps) => {
-  const onChange: TableProps<Product>['onChange'] = (
-    pagination,
-    filters,
-    sorter,
-    extra
-  ) => {
-    console.log(
-      'params',
-      pagination,
-      filters,
-      sorter,
-      extra,
-      pagination.current
-    )
+  const onChange: TableProps<Product>['onChange'] = (pagination) => {
     onTableValuesChange({
       current: pagination.current ?? 1,
       pageSize: pagination.pageSize ?? 10,

@@ -1,13 +1,15 @@
-import { useState } from 'react'
 import { Button, Typography, Spin, Alert, Tooltip } from 'antd'
+import { useState } from 'react'
 import ProductsTable from './components/ProductsTable'
 import InsertProductModal from './components/InsertProductModal'
 import PlusIcon from './components/icons/PlusIcon'
 import Container from './components/Container'
 import useInsertProduct from './hooks/useInsertProduct'
-import { ProductForm } from './types'
+import useDebounce from './hooks/useDebounce'
 import useGetProducts from './hooks/useGetProducts'
 import ReloadIcon from './components/icons/ReloadIcon'
+import SearchBar from './components/SearchBar'
+import { ProductForm } from './types'
 
 const { Title } = Typography
 
@@ -15,6 +17,8 @@ const Products = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5) // Set your desired page size
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('') // Set your desired page size
+  const debouncedSearchQuery = useDebounce(searchQuery, 400)
   const {
     data: productsData,
     refetch: refetchProducts,
@@ -24,6 +28,7 @@ const Products = () => {
     variables: {
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
+      searchQuery: debouncedSearchQuery ? `^${debouncedSearchQuery}` : '',
     },
   })
 
@@ -38,6 +43,7 @@ const Products = () => {
       refetchProducts({
         limit: 5,
         offset: (currentPage - 1) * pageSize,
+        searchQuery: debouncedSearchQuery,
       })
     } catch (error) {
       console.log(error)
@@ -106,6 +112,10 @@ const Products = () => {
           >
             Add Product
           </Button>
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
         {productsError && (
           <Alert

@@ -39,6 +39,7 @@ export const queryMocks: MockRequest[] = [
       variables: {
         limit: 5,
         offset: 0,
+        searchQuery: '',
       },
     },
     result: {
@@ -86,6 +87,7 @@ export const refetchQueryMock = [
       variables: {
         limit: 5, // Specify the variables if your query requires them
         offset: 0,
+        searchQuery: '',
       },
     },
     result: {
