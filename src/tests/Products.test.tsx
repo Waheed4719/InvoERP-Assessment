@@ -11,13 +11,14 @@ import { renderWithMockedProvider } from './ReusableFunctions'
 
 // Group the tests using the describe block
 describe('Products Component Tests', () => {
-  test('should render Products page title after querying GraphQL', async () => {
+  beforeEach(() => {
     const mockedProvideroptions = {
       mocks: queryMocks,
       addTypename: false,
     }
     renderWithMockedProvider(<Products />, mockedProvideroptions)
-
+  })
+  test('should render Products page title after querying GraphQL', async () => {
     await waitFor(() => {
       const titleElement = screen.getByText('Products', { selector: 'h2' })
       expect(titleElement).toBeInTheDocument()
@@ -25,12 +26,6 @@ describe('Products Component Tests', () => {
   })
 
   test('should render Products after querying GraphQL', async () => {
-    const mockedProvideroptions = {
-      mocks: queryMocks,
-      addTypename: false,
-    }
-    renderWithMockedProvider(<Products />, mockedProvideroptions)
-
     await waitFor(() => {
       const product1 = screen.getByText('Mercedes')
       expect(product1).toBeInTheDocument()
@@ -38,11 +33,6 @@ describe('Products Component Tests', () => {
   })
 
   test('should show Products count after querying GraphQL', async () => {
-    const mockedProvideroptions = {
-      mocks: queryMocks,
-      addTypename: false,
-    }
-    renderWithMockedProvider(<Products />, mockedProvideroptions)
     await waitFor(() => {
       const productCount = screen.getByTestId('products-count')
       expect(productCount).toHaveTextContent(

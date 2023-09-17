@@ -12,21 +12,60 @@ import { renderWithMockedProvider } from './ReusableFunctions'
 // * should render the modal and close it
 // * should render the modal and check if all inputs are present
 // * should update form input values when changed
-// * should call onOk with form inputs when submitted
 // * should display validation error message on failed submission
+// * should call onOk with form inputs when submitted
 // * should call onCancel when the modal is canceled
+
+type FormInputObject = {
+  [key: string]: HTMLElement // Adjust the type as needed
+}
+
+type FormValues = {
+  [key: string]: string | number
+}
+
+const openModal = async () => {
+  const mockedProvideroptions = {
+    mocks: queryMocks,
+    addTypename: false,
+  }
+  renderWithMockedProvider(<Products />, mockedProvideroptions)
+
+  const openModalButton = screen.getByTestId('open-add-product-modal-button')
+  await act(() => {
+    userEvent.click(openModalButton)
+  })
+}
+
+const getFormInputs = async () => {
+  const nameInput = screen.getByTestId('name-input')
+  const descriptionInput = screen.getByTestId('description-input')
+  const stockInput = screen.getByTestId('stock-input')
+  const priceInput = screen.getByTestId('price-input')
+
+  return {
+    nameInput,
+    descriptionInput,
+    stockInput,
+    priceInput,
+  }
+}
+
+const changeFormInputs = async (
+  formInputs: FormInputObject,
+  values: FormValues
+) => {
+  await act(() => {
+    Object.entries(formInputs).forEach(([inputName, inputElement]) => {
+      const inputValue = values[inputName]
+      fireEvent.change(inputElement, { target: { value: inputValue } })
+    })
+  })
+}
 
 describe('InsertProductModal Component Tests', () => {
   it('should render the modal', () => {
-    const mockedProvideroptions = {
-      mocks: queryMocks,
-      addTypename: false,
-    }
-    renderWithMockedProvider(<Products />, mockedProvideroptions)
-
-    const openModalButton = screen.getByTestId('open-add-product-modal-button')
-    fireEvent.click(openModalButton)
-
+    openModal()
     // Check if the modal is rendered
     const modal = screen.getByTestId('insert-product-modal')
     expect(modal).toBeInTheDocument()
@@ -37,17 +76,7 @@ describe('InsertProductModal Component Tests', () => {
   })
 
   it('should render the modal and close it', async () => {
-    const mockedProvideroptions = {
-      mocks: queryMocks,
-      addTypename: false,
-    }
-    renderWithMockedProvider(<Products />, mockedProvideroptions)
-
-    const openModalButton = screen.getByTestId('open-add-product-modal-button')
-    await act(() => {
-      userEvent.click(openModalButton)
-    })
-
+    openModal()
     // Check if the modal is rendered
     const modal = screen.getByTestId('insert-product-modal')
     await waitFor(() => {
@@ -65,16 +94,7 @@ describe('InsertProductModal Component Tests', () => {
   })
 
   it('should render the modal and check if all inputs are present', async () => {
-    const mockedProvideroptions = {
-      mocks: queryMocks,
-      addTypename: false,
-    }
-    renderWithMockedProvider(<Products />, mockedProvideroptions)
-
-    const openModalButton = screen.getByTestId('open-add-product-modal-button')
-    await act(() => {
-      userEvent.click(openModalButton)
-    })
+    openModal()
     // Check if the modal is rendered
     await waitFor(() => {
       const modal = screen.getByTestId('insert-product-modal')
@@ -84,40 +104,83 @@ describe('InsertProductModal Component Tests', () => {
     const modalTitle = screen.getByText('Add New Product')
     expect(modalTitle).toBeInTheDocument()
 
-    // Check if input fields are present
-    const nameInput = screen.getByTestId('name-input')
-    const descriptionInput = screen.getByTestId('description-input')
-    const stockInput = screen.getByTestId('stock-input')
-    const priceInput = screen.getByTestId('price-input')
+    const FormInputs = await getFormInputs()
 
-    expect(nameInput).toBeInTheDocument()
-    expect(descriptionInput).toBeInTheDocument()
-    expect(stockInput).toBeInTheDocument()
-    expect(priceInput).toBeInTheDocument()
+    // Check if input fields are present
+    Object.entries(FormInputs).forEach(([_, inputElement]) => {
+      expect(inputElement).toBeInTheDocument()
+    })
   })
 
   it('should update form input values when changed', async () => {
-    const mockOnOk = jest.fn()
-    const mockOnCancel = jest.fn()
-    const { getByTestId } = render(
-      <InsertProductModal open={true} onCancel={mockOnCancel} onOk={mockOnOk} />
-    )
+    openModal()
+    // Check if the modal is rendered
+    await waitFor(() => {
+      const modal = screen.getByTestId('insert-product-modal')
+      expect(modal).toBeInTheDocument()
+    })
 
     // Fill in form inputs
-    const nameInput = getByTestId('name-input')
-    const descriptionInput = getByTestId('description-input')
-    await act(() => {
-      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
-      fireEvent.change(descriptionInput, {
-        target: { value: 'Test Description' },
-      })
-    })
+    const nameInput = screen.getByTestId('name-input')
+    const descriptionInput = screen.getByTestId('description-input')
+
+    await changeFormInputs(
+      { nameInput, descriptionInput },
+      {
+        nameInput: 'Test Name',
+        descriptionInput: 'Test Description',
+      }
+    )
+
     await waitFor(() => {
       expect(nameInput).toHaveValue('Test Name')
       expect(descriptionInput).toHaveValue('Test Description')
     })
   })
 
+  it('should display validation error message on failed submission', async () => {
+    openModal()
+    // Check if the modal is rendered
+    await waitFor(() => {
+      const modal = screen.getByTestId('insert-product-modal')
+      expect(modal).toBeInTheDocument()
+    })
+    // Create a spy/mock for the message.error method
+    const messageErrorSpy = jest.spyOn(message, 'error')
+
+    const { nameInput, descriptionInput, stockInput, priceInput } =
+      await getFormInputs()
+
+    // Fill in form inputs with invalid data (e.g., leaving name and description empty)
+    await changeFormInputs(
+      { nameInput, descriptionInput, stockInput, priceInput },
+      {
+        nameInput: '',
+        descriptionInput: '',
+        stockInput: 10,
+        priceInput: 9.99,
+      }
+    )
+    // Click the "Add Product" button in the modal to submit
+    const modalSubmitButton = screen.getByTestId('add-product')
+    await act(() => {
+      fireEvent.click(modalSubmitButton)
+    })
+    // Wait for the form submission and validation to settle
+    await waitFor(() => {
+      // Check if a validation error message is displayed for the name input
+      const nameError = screen.getByText('Please enter a name')
+      expect(nameError).toBeInTheDocument()
+
+      // Check if a validation error message is displayed for the description input
+      const descriptionError = screen.getByText('Please enter a description')
+      expect(descriptionError).toBeInTheDocument()
+
+      expect(messageErrorSpy).toHaveBeenCalled()
+    })
+  })
+
+  // testing the onOk mock function
   it('should call onOk with form inputs when submitted', async () => {
     const mockOnOk = jest.fn()
     const mockOnCancel = jest.fn()
@@ -125,19 +188,20 @@ describe('InsertProductModal Component Tests', () => {
       <InsertProductModal open={true} onCancel={mockOnCancel} onOk={mockOnOk} />
     )
 
+    const { nameInput, descriptionInput, stockInput, priceInput } =
+      await getFormInputs()
+
     // Fill in form inputs
-    const nameInput = getByTestId('name-input')
-    const descriptionInput = getByTestId('description-input')
-    const stockInput = getByTestId('stock-input')
-    const priceInput = getByTestId('price-input')
-    await act(() => {
-      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
-      fireEvent.change(descriptionInput, {
-        target: { value: 'Test Description' },
-      })
-      fireEvent.change(stockInput, { target: { value: '10' } })
-      fireEvent.change(priceInput, { target: { value: '9.99' } })
-    })
+    await changeFormInputs(
+      { nameInput, descriptionInput, stockInput, priceInput },
+      {
+        nameInput: 'Test Name',
+        descriptionInput: 'Test Description',
+        stockInput: 10,
+        priceInput: 9.99,
+      }
+    )
+
     // Click the "Add Product" button in the modal to submit
     const modalSubmitButton = getByTestId('add-product')
     await act(() => {
@@ -154,47 +218,7 @@ describe('InsertProductModal Component Tests', () => {
       })
     })
   })
-
-  it('should display validation error message on failed submission', async () => {
-    const mockOnOk = jest.fn()
-    const mockOnCancel = jest.fn()
-    const { getByTestId } = render(
-      <InsertProductModal open={true} onCancel={mockOnCancel} onOk={mockOnOk} />
-    )
-    // Create a spy/mock for the message.error method
-    const messageErrorSpy = jest.spyOn(message, 'error')
-    // Fill in form inputs with invalid data (e.g., leaving name and description empty)
-    const nameInput = getByTestId('name-input')
-    const descriptionInput = getByTestId('description-input')
-    const stockInput = getByTestId('stock-input')
-    const priceInput = getByTestId('price-input')
-    await act(() => {
-      fireEvent.change(nameInput, { target: { value: '' } })
-      fireEvent.change(descriptionInput, { target: { value: '' } })
-      fireEvent.change(stockInput, { target: { value: '10' } })
-      fireEvent.change(priceInput, { target: { value: '9.99' } })
-    })
-    // Click the "Add Product" button in the modal to submit
-    const modalSubmitButton = getByTestId('add-product')
-    await act(() => {
-      fireEvent.click(modalSubmitButton)
-    })
-    // Wait for the form submission and validation to settle
-    await waitFor(() => {
-      // Check if a validation error message is displayed for the name input
-      const nameError = screen.getByText('Please enter a name')
-      expect(nameError).toBeInTheDocument()
-
-      // Check if a validation error message is displayed for the description input
-      const descriptionError = screen.getByText('Please enter a description')
-      expect(descriptionError).toBeInTheDocument()
-
-      // Ensure that onOk was not called since the form submission failed
-      expect(mockOnOk).not.toHaveBeenCalled()
-      expect(messageErrorSpy).toHaveBeenCalled()
-    })
-  })
-
+  // testing the onCancel mock function
   it('should call onCancel when the modal is cancelled', () => {
     const mockOnOk = jest.fn()
     const mockOnCancel = jest.fn()

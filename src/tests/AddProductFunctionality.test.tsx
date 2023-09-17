@@ -3,11 +3,7 @@ import { wait } from '@apollo/client/testing'
 import { screen, waitFor, fireEvent, act } from '@testing-library/react'
 import { message } from 'antd'
 import Products from '../Products'
-import {
-  mutationMocks,
-  queryMocks,
-  refetchQueryMock,
-} from '../lib/graphql/mocks' // Import your GraphQL query
+import { mutationMocks, queryMocks } from '../lib/graphql/mocks' // Import your GraphQL query
 import userEvent from '@testing-library/user-event'
 import { renderWithMockedProvider } from './ReusableFunctions'
 
@@ -17,7 +13,7 @@ import { renderWithMockedProvider } from './ReusableFunctions'
 describe('Add Product Functionality Test', () => {
   it('should insert a product and refetch data to add to the table', async () => {
     const mockedProvideroptions = {
-      mocks: [...queryMocks, ...mutationMocks, ...refetchQueryMock],
+      mocks: [...queryMocks, ...mutationMocks],
       addTypename: false,
     }
     const { getByTestId } = renderWithMockedProvider(
