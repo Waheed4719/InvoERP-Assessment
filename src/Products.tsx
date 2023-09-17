@@ -109,6 +109,7 @@ const Products = () => {
             type="primary"
             style={{ display: 'flex', alignItems: 'center' }}
             onClick={() => setModalOpen(true)}
+            disabled={isLoadingProducts || Boolean(productsError)}
           >
             Add Product
           </Button>
