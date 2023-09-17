@@ -67,12 +67,47 @@ export const mutationMocks = [
     },
     result: {
       data: {
-        addTodo: {
+        insert_products_one: {
           id: '3',
           name: 'Test Product',
           description: 'Test Product description',
           stock: 20,
           price: 30.0,
+        },
+      },
+    },
+  },
+]
+
+export const refetchQueryMock = [
+  {
+    request: {
+      query: GET_PRODUCTS, // The refetch query you want to mock
+      variables: {
+        limit: 5, // Specify the variables if your query requires them
+        offset: 0,
+      },
+    },
+    result: {
+      data: {
+        products: [
+          // Mocked product data that matches your query
+          // You can provide any data that you expect the refetch query to return
+          // Ensure that the data structure matches the query schema
+          ...sample_products,
+          {
+            id: '3',
+            name: 'Test Product',
+            description: 'Test Product description',
+            stock: 20,
+            price: 30.0,
+          },
+          // Add more products as needed
+        ],
+        products_aggregate: {
+          aggregate: {
+            count: sample_products.length + 1, // Mock the desired count value
+          },
         },
       },
     },

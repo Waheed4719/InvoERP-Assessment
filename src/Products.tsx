@@ -35,7 +35,10 @@ const Products = () => {
     try {
       await handleInsertProduct(values)
       setModalOpen(false)
-      refetchProducts()
+      refetchProducts({
+        limit: 5,
+        offset: (currentPage - 1) * pageSize,
+      })
     } catch (error) {
       console.log(error)
     }
