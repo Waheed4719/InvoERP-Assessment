@@ -6,7 +6,6 @@ const SearchBar = (props: InputProps) => {
     <Input
       data-testid="search-bar"
       {...props}
-      placeholder="Search from start of product name"
       allowClear
       onChange={onChange}
     />
