@@ -116,6 +116,7 @@ const Products = () => {
           <SearchBar
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search from start of product name"
           />
         </div>
         {productsError && (
