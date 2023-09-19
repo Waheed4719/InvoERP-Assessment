@@ -9,11 +9,13 @@ import useDebounce from './hooks/useDebounce'
 import useGetProducts from './hooks/useGetProducts'
 import ReloadIcon from './components/icons/ReloadIcon'
 import SearchBar from './components/SearchBar'
+import { useApolloClient } from '@apollo/client'
 import { ProductForm } from './types'
 
 const { Title } = Typography
 
 const Products = () => {
+  const client = useApolloClient()
   const [modalOpen, setModalOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5) // Set your desired page size
   const [currentPage, setCurrentPage] = useState(1)
@@ -31,7 +33,6 @@ const Products = () => {
       searchQuery: debouncedSearchQuery ? `^${debouncedSearchQuery}` : '',
     },
   })
-
   const handleInsertProduct = useInsertProduct({})
   const products = productsData?.products ?? []
   const productsCount = productsData?.products_aggregate?.aggregate.count ?? 0
@@ -40,8 +41,13 @@ const Products = () => {
     try {
       await handleInsertProduct(values)
       setModalOpen(false)
+      // Manually invalidate the cache for the products query
+      client.cache.evict({
+        fieldName: 'products',
+        broadcast: false,
+      })
       refetchProducts({
-        limit: 5,
+        limit: pageSize,
         offset: (currentPage - 1) * pageSize,
         searchQuery: debouncedSearchQuery,
       })

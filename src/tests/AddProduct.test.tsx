@@ -34,6 +34,9 @@ describe('Add Product Functionality Test', () => {
     const openModalButton = screen.getByTestId('open-add-product-modal-button')
     fireEvent.click(openModalButton)
     const messageSuccessSpy = jest.spyOn(message, 'success')
+
+    await wait(1000)
+
     // Check if the modal is rendered
     const modal = screen.getByTestId('insert-product-modal')
     expect(modal).toBeInTheDocument()
@@ -64,7 +67,7 @@ describe('Add Product Functionality Test', () => {
     })
 
     // add a timeout to wait for the mutation to settle
-    await wait(0)
+    await wait(1000)
 
     // Wait for the form submission to settle
     await waitFor(async () => {

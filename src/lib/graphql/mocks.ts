@@ -13,6 +13,7 @@ type MockRequest = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any // Replace with the specific shape of your result data
   }
+  delay?: number
 }
 
 export const queryMocks: MockRequest[] = [
@@ -35,6 +36,7 @@ export const queryMocks: MockRequest[] = [
         },
       },
     },
+    delay: 200,
   },
   {
     request: {
@@ -65,6 +67,7 @@ export const queryMocks: MockRequest[] = [
         },
       },
     },
+    delay: 200,
   },
   {
     request: {
@@ -91,6 +94,7 @@ export const queryMocks: MockRequest[] = [
         },
       },
     },
+    delay: 200,
   },
 ]
 
@@ -140,6 +144,7 @@ export const queryPaginationMock: MockRequest[] = [
         },
       },
     },
+    delay: 200,
   },
 
   {
@@ -162,5 +167,6 @@ export const queryPaginationMock: MockRequest[] = [
         },
       },
     },
+    delay: 200,
   },
 ]

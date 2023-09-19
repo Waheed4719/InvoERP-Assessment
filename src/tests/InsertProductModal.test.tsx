@@ -6,7 +6,7 @@ import Products from '../Products'
 import { queryMocks } from '../lib/graphql/mocks' // Import your GraphQL query
 import userEvent from '@testing-library/user-event'
 import { renderWithMockedProvider } from './ReusableFunctions'
-
+import { wait } from '@apollo/client/testing'
 // Tests done
 // * should render the modal
 // * should render the modal and close it
@@ -30,8 +30,9 @@ const openModal = async () => {
     addTypename: false,
   }
   renderWithMockedProvider(<Products />, mockedProvideroptions)
-
+  await wait(1000)
   const openModalButton = screen.getByTestId('open-add-product-modal-button')
+
   await act(() => {
     userEvent.click(openModalButton)
   })
@@ -64,19 +65,20 @@ const changeFormInputs = async (
 }
 
 describe('InsertProductModal Component Tests', () => {
-  it('should render the modal', () => {
-    openModal()
+  it('should render the modal', async () => {
+    await openModal()
     // Check if the modal is rendered
-    const modal = screen.getByTestId('insert-product-modal')
-    expect(modal).toBeInTheDocument()
-
+    const modal = await screen.getByTestId('insert-product-modal')
+    await waitFor(() => {
+      expect(modal).toBeInTheDocument()
+    })
     // Check if input fields are present
     const nameInput = screen.getByTestId('name-input')
     expect(nameInput).toBeInTheDocument()
   })
 
   it('should render the modal and close it', async () => {
-    openModal()
+    await openModal()
     // Check if the modal is rendered
     const modal = screen.getByTestId('insert-product-modal')
     await waitFor(() => {
@@ -94,7 +96,7 @@ describe('InsertProductModal Component Tests', () => {
   })
 
   it('should render the modal and check if all inputs are present', async () => {
-    openModal()
+    await openModal()
     // Check if the modal is rendered
     await waitFor(() => {
       const modal = screen.getByTestId('insert-product-modal')
@@ -113,7 +115,7 @@ describe('InsertProductModal Component Tests', () => {
   })
 
   it('should update form input values when changed', async () => {
-    openModal()
+    await openModal()
     // Check if the modal is rendered
     await waitFor(() => {
       const modal = screen.getByTestId('insert-product-modal')
@@ -139,7 +141,7 @@ describe('InsertProductModal Component Tests', () => {
   })
 
   it('should display validation error message on failed submission', async () => {
-    openModal()
+    await openModal()
     // Check if the modal is rendered
     await waitFor(() => {
       const modal = screen.getByTestId('insert-product-modal')
@@ -180,7 +182,7 @@ describe('InsertProductModal Component Tests', () => {
     })
   })
 
-  // testing the onOk mock function
+  // // testing the onOk mock function
   it('should call onOk with form inputs when submitted', async () => {
     const mockOnOk = jest.fn()
     const mockOnCancel = jest.fn()
