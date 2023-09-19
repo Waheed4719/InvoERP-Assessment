@@ -7,6 +7,7 @@ import { queryMocks } from '../lib/graphql/mocks' // Import your GraphQL query
 import userEvent from '@testing-library/user-event'
 import { renderWithMockedProvider } from './ReusableFunctions'
 import { wait } from '@apollo/client/testing'
+
 // Tests done
 // * should render the modal
 // * should render the modal and close it
