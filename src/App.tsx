@@ -43,7 +43,7 @@ const App = () => {
               Inventory App
             </Title>
           </Header>
-          <Content style={{ padding: '1em' }}>
+          <Content style={{ padding: '1em', overflow: 'auto' }}>
             <Products />
           </Content>
         </Layout>

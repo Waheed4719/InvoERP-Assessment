@@ -69,7 +69,14 @@ const Products = () => {
   }
 
   return (
-    <div style={{ height: '100%', backgroundColor: '#fff', padding: '20px' }}>
+    <div
+      style={{
+        minHeight: '100%',
+        height: 'auto',
+        backgroundColor: '#fff',
+        padding: '20px',
+      }}
+    >
       <Container>
         <div
           style={{
